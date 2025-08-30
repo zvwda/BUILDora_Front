@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import axios from "axios";
-
+import { toast } from "react-hot-toast";
+import emailjs from "@emailjs/browser";
 export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
     projectType: "",
-    message: ""
+    message: "",
   });
 
   const [status, setStatus] = useState("");
@@ -15,9 +16,9 @@ export default function ContactSection() {
 
   // تحديث الحقول
   const handleChange = (e) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
@@ -28,32 +29,55 @@ export default function ContactSection() {
     setStatus("");
 
     try {
+      const serviceId = "service_sx50krn";
+      const templateId = "template_bypqzhs";
+      const publicKey = "Yd5aBAcWtUPPjCxry";
       const emailData = {
         subject: `New Contact Request from ${formData.name}`,
-        text: `
-Name: ${formData.name}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Project Type: ${formData.projectType}
 
-Message:
-${formData.message}
-        `,
+        from_name: `${formData.name}`,
+        name: `${formData.name}`,
+        data: Date.now(),
+        year: 2025,
+
+        email: `${formData.email}`,
+        phone: `${formData.phone}`,
+        service: `${formData.projectType}`,
+
+        message: `${formData.message}`,
       };
+      emailjs
+        .send(serviceId, templateId, emailData, publicKey)
+        .then((response) => {
+          console.log("SUCCESS!", response.status, response.text);
+          setStatus("Email sent successfully!");
+          toast.success("Email sent successfully!");
+          setFormData({
+            name: "",
+            email: "",
+            phone: "",
+            projectType: "",
+            message: "",
+          });
+        })
+        .catch((err) => {
+          console.log("FAILED...", err);
+          toast.error("Failed to send email.");
+          setStatus("Failed to send email.");
+        });
+      // await axios.post("http://localhost:5000/Email/sendEmail", {
+      //   to: ["amjadayman605@gmail.com"],
+      //   emailData,
+      // });
 
-      await axios.post("buildoraback-production.up.railway.app/Email/sendEmail", {
-        to: ["ali.m.farouk33@gmail.com" ,  "zwalid327@gmail.com" , "amjadayman605@gmail.com" ], 
-        emailData,
-      });
-
-      setStatus("Email sent successfully!");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        projectType: "",
-        message: ""
-      });
+      // setStatus("Email sent successfully!");
+      // setFormData({
+      //   name: "",
+      //   email: "",
+      //   phone: "",
+      //   projectType: "",
+      //   message: "",
+      // });
     } catch (error) {
       setStatus("Failed to send email.");
       console.error(error);
@@ -72,19 +96,24 @@ ${formData.message}
       <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
         {/* Left Text Block */}
         <div>
-          <h3 className="text-xl text-white mb-4">Let’s Build Something Together</h3>
+          <h3 className="text-xl text-white mb-4">
+            Let’s Build Something Together
+          </h3>
           <p className="text-gray-300 mb-2">
             Whether it’s your first website or your tenth product —<br />
             we’re here to help.
           </p>
           <p className="text-gray-300">
-            Just send us a few details, and we’ll get back to you within 24 hours.
+            Just send us a few details, and we’ll get back to you within 24
+            hours.
           </p>
         </div>
 
         {/* Right Form */}
         <div className="bg-white text-black rounded-lg p-8 shadow-lg">
-          <h4 className="text-lg font-semibold mb-6 text-center">Let’s Build Together</h4>
+          <h4 className="text-lg font-semibold mb-6 text-center">
+            Let’s Build Together
+          </h4>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <input
               name="name"
@@ -144,7 +173,8 @@ ${formData.message}
             </button>
 
             <p className="text-center text-sm text-[#0A1C3C] pt-2">
-              {status || "Expect a response from our team within one business day."}
+              {status ||
+                "Expect a response from our team within one business day."}
             </p>
           </form>
         </div>
