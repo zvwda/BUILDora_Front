@@ -41,7 +41,7 @@ ${formData.message}
         `,
       };
 
-      await axios.post("http://localhost:5000/Email/sendEmail", {
+      await axios.post("buildoraback-production.up.railway.app/Email/sendEmail", {
         to: ["ali.m.farouk33@gmail.com" ,  "zwalid327@gmail.com" , "amjadayman605@gmail.com" ], 
         emailData,
       });
