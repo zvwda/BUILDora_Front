@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import emailjs from "@emailjs/browser";
+import { PulseLoader } from "react-spinners";
 export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: "",
@@ -28,62 +29,59 @@ export default function ContactSection() {
     setIsLoading(true);
     setStatus("");
 
-    try {
-      const serviceId = "service_sx50krn";
-      const templateId = "template_bypqzhs";
-      const publicKey = "Yd5aBAcWtUPPjCxry";
-      const emailData = {
-        subject: `New Contact Request from ${formData.name}`,
+    const serviceId = "service_sx50krn";
+    const templateId = "template_bypqzhs";
+    const publicKey = "Yd5aBAcWtUPPjCxry";
+    const emailData = {
+      subject: `New Contact Request from ${formData.name}`,
 
-        from_name: `${formData.name}`,
-        name: `${formData.name}`,
-        data: Date.now(),
-        year: 2025,
+      from_name: `${formData.name}`,
+      name: `${formData.name}`,
+      data: Date.now(),
+      year: 2025,
 
-        email: `${formData.email}`,
-        phone: `${formData.phone}`,
-        service: `${formData.projectType}`,
+      email: `${formData.email}`,
+      phone: `${formData.phone}`,
+      service: `${formData.projectType}`,
 
-        message: `${formData.message}`,
-      };
-      emailjs
-        .send(serviceId, templateId, emailData, publicKey)
-        .then((response) => {
-          console.log("SUCCESS!", response.status, response.text);
-          setStatus("Email sent successfully!");
-          toast.success("Email sent successfully!");
-          setFormData({
-            name: "",
-            email: "",
-            phone: "",
-            projectType: "",
-            message: "",
-          });
-        })
-        .catch((err) => {
-          console.log("FAILED...", err);
-          toast.error("Failed to send email.");
-          setStatus("Failed to send email.");
+      message: `${formData.message}`,
+    };
+    emailjs
+      .send(serviceId, templateId, emailData, publicKey)
+      .then((response) => {
+        console.log("SUCCESS!", response.status, response.text);
+        setStatus("Email sent successfully!");
+        toast.success("Email sent successfully!");
+
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          projectType: "",
+          message: "",
         });
-      // await axios.post("http://localhost:5000/Email/sendEmail", {
-      //   to: ["amjadayman605@gmail.com"],
-      //   emailData,
-      // });
+      })
+      .catch((err) => {
+        console.log("FAILED...", err);
+        toast.error("Failed to send email.");
+        setStatus("Failed to send email.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+    // await axios.post("http://localhost:5000/Email/sendEmail", {
+    //   to: ["amjadayman605@gmail.com"],
+    //   emailData,
+    // });
 
-      // setStatus("Email sent successfully!");
-      // setFormData({
-      //   name: "",
-      //   email: "",
-      //   phone: "",
-      //   projectType: "",
-      //   message: "",
-      // });
-    } catch (error) {
-      setStatus("Failed to send email.");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    // setStatus("Email sent successfully!");
+    // setFormData({
+    //   name: "",
+    //   email: "",
+    //   phone: "",
+    //   projectType: "",
+    //   message: "",
+    // });
   };
 
   return (
@@ -163,14 +161,19 @@ export default function ContactSection() {
               className="w-full border border-gray-300 px-4 py-2 rounded resize-none focus:outline-none focus:ring-2 focus:ring-[#00bfffe8]"
               required
             ></textarea>
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-[#0A1C3C] text-white py-3 rounded hover:bg-[#00bfffe8] transition"
-            >
-              {isLoading ? "Sending..." : "Send Request"}
-            </button>
+            {isLoading ? (
+              <div className="flex justify-center">
+                <PulseLoader color="#0A1C3C" />
+              </div>
+            ) : (
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-[#0A1C3C] text-white py-3 rounded hover:bg-[#00bfffe8] transition"
+              >
+                {isLoading ? "Sending..." : "Send Request"}
+              </button>
+            )}
 
             <p className="text-center text-sm text-[#0A1C3C] pt-2">
               {status ||
