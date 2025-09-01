@@ -8,7 +8,7 @@ import WhyBuildSection from "./components/WhyBuildSection";
 import ContactSection from "./components/ContactSection";
 import Footer from "./components/Footer";
 import bgImage from "./assets/bg.jpg";
-import SplashPage from "./SplashPage";
+import SplashPage from "./components/SplashPage";
 
 function HomePage() {
   const [loading, setLoading] = useState(true);

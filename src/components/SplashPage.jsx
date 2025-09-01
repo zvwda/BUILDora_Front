@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-import logo from "./assets/logo.png";
+import logo from "../assets/LOGO.png";
 
 export default function SplashPage() {
   return (
