@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+//import axios from "axios";
 import { toast } from "react-hot-toast";
 import emailjs from "@emailjs/browser";
 import { PulseLoader } from "react-spinners";
@@ -37,7 +37,7 @@ export default function ContactSection() {
 
       from_name: `${formData.name}`,
       name: `${formData.name}`,
-      data: Date.now(),
+      time: new Date().toLocaleTimeString(),
       year: 2025,
 
       email: `${formData.email}`,
